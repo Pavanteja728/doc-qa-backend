@@ -5,7 +5,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 import tempfile
 import os
@@ -31,7 +31,7 @@ def ingest_pdf(file_bytes: bytes, filename: str) -> str:
         separators=["\n\n", "\n", ".", " "]
     )
     chunks = splitter.split_documents(docs)
-    vectorstore = Chroma.from_documents(chunks, embeddings)
+    vectorstore = FAISS.from_documents(chunks, embeddings)
     current_filename = filename
     os.unlink(tmp_path)
     return f"Ingested {len(chunks)} chunks from '{filename}'"
